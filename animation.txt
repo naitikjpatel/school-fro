@@ -1,0 +1,140 @@
+// AnimatedList.js
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaEdit, FaTrashAlt, FaEye } from 'react-icons/fa';
+import './AnimatedList.css';
+
+const AnimatedList = ({ students, onEdit, onDelete, onView }) => {
+  return (
+    <div className="scroll-list-container">
+      <div className="scroll-list">
+        <AnimatePresence>
+          {students.map((student, index) => (
+            <motion.div
+              key={student.id}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="item"
+            >
+              <div className="item-content">
+                <p>{student.name}</p>
+                <div className="actions">
+                  <button onClick={() => onView(student.id)}><FaEye /></button>
+                  <button onClick={() => onEdit(student.id)}><FaEdit /></button>
+                  <button onClick={() => onDelete(student.id)}><FaTrashAlt /></button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
+
+export default AnimatedList;
+
+
+=================================
+
+/* AnimatedList.css */
+.scroll-list-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.scroll-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.item {
+  padding: 16px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-content p {
+  color: white;
+  margin: 0;
+}
+
+.actions button {
+  background: none;
+  border: none;
+  color: #fff;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.actions button:hover {
+  color: #f39c12;
+}
+
+.actions button:focus {
+  outline: none;
+}
+
+
+===================================
+// Dashboard.js
+import React, { useState } from 'react';
+import AnimatedList from './AnimatedList';
+
+const Dashboard = () => {
+  const [students, setStudents] = useState([
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Smith' },
+    // Add more students as needed
+  ]);
+
+  const handleEdit = (id) => {
+    console.log('Edit student with ID:', id);
+  };
+
+  const handleDelete = (id) => {
+    setStudents(students.filter(student => student.id !== id));
+  };
+
+  const handleView = (id) => {
+    console.log('View details for student with ID:', id);
+  };
+
+  return (
+    <div>
+      <h1>Student Dashboard</h1>
+      <AnimatedList
+        students={students}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onView={handleView}
+      />
+    </div>
+  );
+};
+
+export default Dashboard;
+============================
+// App.js
+import React from 'react';
+import Dashboard from './Dashboard';
+
+const App = () => {
+  return (
+    <div>
+      <Dashboard />
+    </div>
+  );
+};
+
+export default App;
