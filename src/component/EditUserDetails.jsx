@@ -106,7 +106,7 @@ const EditUserDetails = ({ userId = 4 }) => {
               onChange={handleChange}
               style={{
                 width: '100%',
-                padding: '1rem',
+                padding: '0.75rem',
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.5rem',
                 color: '#374151',
@@ -129,7 +129,7 @@ const EditUserDetails = ({ userId = 4 }) => {
               onChange={handleChange}
               style={{
                 width: '100%',
-                padding: '1rem',
+                padding: '0.75rem',
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.5rem',
                 color: '#374151',
@@ -151,7 +151,7 @@ const EditUserDetails = ({ userId = 4 }) => {
               onChange={handleChange}
               style={{
                 width: '100%',
-                padding: '1rem',
+                padding: '0.75rem',
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.5rem',
                 color: '#374151',
