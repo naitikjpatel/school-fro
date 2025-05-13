@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
-import Header from "../header/Header";
-import Sidebar from "../sidebar/Sidebar";
 import { useState } from "react";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
 
 const LayoutStudent = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -11,20 +11,17 @@ const LayoutStudent = () => {
   };
 
   return (
-    <>
-      <div className="flex">
-        <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-        <div className="flex-1 relative overflow-auto">
-          <Header toggleSidebar={toggleSidebar} />
-
-          <main className="mt-[46px] px-5 md:px-8 pt-5 pb-[130px] md:pb-[335px] overflow-hidden">
-            <Outlet />
-          </main>
-        </div>
+    <div className="flex h-screen w-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 overflow-hidden">
+      <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex-1 flex flex-col">
+        <Header  toggleSidebar={toggleSidebar} />
+        <main className=" flex-1 overflow-hidden">
+          <Outlet />
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 
 export default LayoutStudent;
+

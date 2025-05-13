@@ -142,3 +142,8 @@ const AnimatedList = ({
 };
 
 export default StudentList;
+
+
+
+
+
