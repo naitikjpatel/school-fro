@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import Loader from './Loader';
 
 const EditUserDetails = ({ userId = 4 }) => {
   const [userDetails, setUserDetails] = useState({
@@ -13,12 +13,16 @@ const EditUserDetails = ({ userId = 4 }) => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:9999/api/users/${userId}`);
-        const { details, address, phone } = response.data.userDetails;
-        setUserDetails({ details, address, phone });
+        setTimeout(() => {
+          setUserDetails({
+            details: 'I am a software developer with 5 years of experience.',
+            address: '123 Tech Street, San Francisco, CA',
+            phone: '(555) 123-4567',
+          });
+          setLoading(false);
+        }, 1000);
       } catch (err) {
         setError('Failed to fetch user details');
-      } finally {
         setLoading(false);
       }
     };
@@ -35,90 +39,142 @@ const EditUserDetails = ({ userId = 4 }) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    console.log(userDetails);
-    
     try {
-      await axios.put(`http://localhost:9999/api/users/${userId}/1`, userDetails);
-      alert('User details updated successfully');
+      setTimeout(() => {
+        setLoading(false);
+        alert('User details updated successfully');
+      }, 1000);
     } catch (err) {
       setError('Failed to update user details');
-    } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="text-center text-indigo-800">Loading...</div>;
-  if (error) return <div className="text-center text-red-600">{error}</div>;
-
-return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-6">
-        <form
-            onSubmit={handleSubmit}
-            className="bg-white p-10 rounded-lg shadow-lg w-full max-w-xl transform transition-all duration-300 hover:shadow-xl"
+  if (loading && !userDetails.details) {
+    return (
+      <div
+        className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
+      >
+        <Loader/>
+        {/* <div
+          className="bg-white rounded-2xl shadow-2xl w-full max-w-lg"
+          style={{ padding: '2rem' }}
         >
-            <h2 className="text-2xl font-bold text-center text-indigo-700 mb-6">Edit Profile</h2>
+          <div className="text-center text-indigo-600 text-xl font-semibold animate-pulse">
+            Loading...
+          </div>
+        </div> */}
+      </div>
+    );
+  }
 
-            <div className="space-y-5">
-                <div>
-                    <label htmlFor="details" className="block text-sm font-medium text-gray-700 mb-2">
-                        About You
-                    </label>
-                    <textarea
-                        id="details"
-                        name="details"
-                        value={userDetails.details}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 transition-all duration-200"
-                        placeholder="Tell us about yourself"
-                        required
-                    />
-                </div>
+  return (
+    <div
+      className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
+      style={{ padding: '1.5rem' }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 hover:shadow-3xl"
+        style={{ padding: '2rem', margin: '1rem' }}
+      >
+        <h2
+          className="text-3xl font-bold text-center text-indigo-800 tracking-tight"
+          style={{ marginBottom: '2rem' }}
+        >
+          Edit Profile
+        </h2>
 
-                <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                        Address
-                    </label>
-                    <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={userDetails.address}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 transition-all duration-200"
-                        placeholder="Enter your address"
-                        required
-                    />
-                </div>
+        {error && (
+          <div
+            className="text-red-600 text-sm text-center bg-red-50 rounded-lg"
+            style={{ marginBottom: '1.5rem', padding: '0.75rem' }}
+          >
+            {error}
+          </div>
+        )}
 
-                <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone Number
-                    </label>
-                    <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value={userDetails.phone}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 transition-all duration-200"
-                        placeholder="Enter your phone number"
-                        required
-                    />
-                </div>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div>
+            <label htmlFor="details" className="block text-md font-medium text-gray-800" style={{ marginBottom: '0.25rem' }}>
+              About You
+            </label>
+            <textarea
+              id="details"
+              name="details"
+              value={userDetails.details}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                border: '1px solid #e5e7eb',
+                borderRadius: '0.5rem',
+                color: '#374151',
+              }}
+              placeholder="Tell us about yourself"
+              rows={4}
+              required
+            />
+          </div>
 
-            <div className="mt-6 flex justify-center">
-                <button
-                    type="submit"
-                    className="py-3 px-6 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium rounded-md shadow-md hover:from-indigo-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105"
-                    disabled={loading}
-                >
-                    {loading ? 'Updating...' : 'Save Changes'}
-                </button>
-            </div>
-        </form>
+          <div>
+            <label htmlFor="address" className="block text-md font-medium text-gray-800" style={{ marginBottom: '0.25rem' }}>
+              Address
+            </label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={userDetails.address}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                border: '1px solid #e5e7eb',
+                borderRadius: '0.5rem',
+                color: '#374151',
+              }}
+              placeholder="Enter your address"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-md font-medium text-gray-800" style={{ marginBottom: '0.25rem' }}>
+              Phone Number
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={userDetails.phone}
+              onChange={handleChange}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                border: '1px solid #e5e7eb',
+                borderRadius: '0.5rem',
+                color: '#374151',
+              }}
+              placeholder="Enter your phone number"
+              required
+            />
+          </div>
+        </div>
+
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+          <button
+            type="submit"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105"
+            style={{ padding: '0.75rem 1.5rem', width: '70%' }}
+            disabled={loading}
+          >
+            {loading ? 'Updating...' : 'Save Changes'}
+          </button>
+        </div>
+      </form>
     </div>
-);
+  );
 };
 
 export default EditUserDetails;

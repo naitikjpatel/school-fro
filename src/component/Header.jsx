@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Header = ({ toggleSidebar }) => {
+const Header = ({ toggleSidebar,userId=4 }) => {
+
+    
+
+
   return (
 
     <header className="bg-white flex justify-between items-center w-full fixed top-0 left-0" style={{ padding: "10px 20px", borderBottom: "1px solid #ddd", zIndex: 1000 }}>
