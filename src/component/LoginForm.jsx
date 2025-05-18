@@ -43,7 +43,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen  w-screen h-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
+    <div className="flex justify-center items-center min-h-screen  w-[100%] h-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 hover:shadow-3xl"

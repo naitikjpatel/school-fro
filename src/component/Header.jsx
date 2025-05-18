@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Header = ({ toggleSidebar,userId=4 }) => {
-
-    
-
-
+const Header = ({ toggleSidebar, userId = 4 }) => {
   return (
-
-    <header className="bg-white flex justify-between items-center w-full fixed top-0 left-0" style={{ padding: "10px 20px", borderBottom: "1px solid #ddd", zIndex: 1000 }}>
-      <div className="flex items-center space-x-4">
+    <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center w-full">
+      {/* Left section with logo and hamburger */}
+      <div className="flex items-center gap-4">
+        {/* Sidebar Toggle Button (mobile only) */}
         <button
           onClick={toggleSidebar}
-          className="text-indigo-600 md:hidden " style={{marginRight: "10px"}}
+          className="text-indigo-600 md:hidden focus:outline-none"
           aria-label="Toggle Sidebar"
         >
           <svg
@@ -21,7 +18,7 @@ const Header = ({ toggleSidebar,userId=4 }) => {
             stroke="currentColor"
             viewBox="0 0 24 24"
             strokeWidth="2"
-          > 
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -29,16 +26,19 @@ const Header = ({ toggleSidebar,userId=4 }) => {
             />
           </svg>
         </button>
-        <div className="lg:text-3xl md:text-3lg sm:text-lg font-semibold text-indigo-600">
+
+        {/* Logo or School Name */}
+        <h1 className="text-xl md:text-2xl font-semibold text-indigo-600">
           Greenwood High
-        </div>
+        </h1>
       </div>
-      <div>
-        <span className="lg:text-3xl md:text-3lg sm:text-lg font-medium text-indigo-800">John Doe</span>
+
+      {/* Right section with user name */}
+      <div className="text-base md:text-lg font-medium text-indigo-800">
+        John Doe
       </div>
     </header>
   );
 };
 
 export default Header;
-
