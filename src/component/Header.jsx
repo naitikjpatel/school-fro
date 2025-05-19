@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = ({ toggleSidebar, userId = 4 }) => {
   return (
-    <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center w-full">
+    <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center w-full " > 
       {/* Left section with logo and hamburger */}
       <div className="flex items-center gap-4">
         {/* Sidebar Toggle Button (mobile only) */}

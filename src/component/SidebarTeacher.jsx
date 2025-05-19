@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Sidebar = ({ isSidebarOpen }) => {
+const SidebarTeacher = ({ isSidebarOpen }) => {
   return (
     <div className={`bg-gray-400 w-64 min-h-screen flex flex-col`}>
       {/* Header */}
@@ -12,8 +12,8 @@ const Sidebar = ({ isSidebarOpen }) => {
       {/* Navigation */}
       <nav className="h-screen overflow-y-auto mt-6">
         <ul className="flex flex-col gap-4 px-6">
-          <SidebarItem to="/layoutstudent/courses" label="Courses" />
-          <SidebarItem to="/subjects" label="Subjects" />
+          <SidebarItem to="/layoutteacher/studentlist" label="StudentList" />
+          <SidebarItem to="/layoutteacher/courselist" label="CourseList" />
           <SidebarItem to="/layoutstudent/results" label="Results" />
           <SidebarItem to="/layoutstudent/editprofile" label="Edit Profile" />
         </ul>
@@ -33,4 +33,4 @@ const SidebarItem = ({ to, label }) => (
   </li>
 );
 
-export default Sidebar;
+export default SidebarTeacher;

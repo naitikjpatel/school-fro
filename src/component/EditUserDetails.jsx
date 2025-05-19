@@ -1,76 +1,102 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Loader from './Loader';
 
-const EditUserDetails = ({ userId = 4 }) => {
-  const [userDetails, setUserDetails] = useState({
-    details: '',
-    address: '',
-    phone: '',
+const EditUserDetails = ({ userId = 5 }) => {
+  const [user, setUser] = useState({
+    userId: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    userType: {
+      userTypeId: '',
+      userTypes: '',
+    },
+    userDetails: {
+      userDetailId: '',
+      details: '',
+      address: '',
+      phone: '',
+    },
+    results: [],
+    courses: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    const fetchUser = async () => {
       try {
-        setTimeout(() => {
-          setUserDetails({
-            details: 'I am a software developer with 5 years of experience.',
-            address: '123 Tech Street, San Francisco, CA',
-            phone: '(555) 123-4567',
-          });
-          setLoading(false);
-        }, 1000);
+        const response = await axios.get(`http://localhost:9999/api/users/${userId}`);
+        console.log(response.data);
+        
+        setUser({
+          userId: response.data.userId || '',
+          firstName: response.data.firstName || '',
+          lastName: response.data.lastName || '',
+          email: response.data.email || '',
+          userType: {
+            userTypeId: response.data.userType?.userTypeId || '',
+            userTypes: response.data.userType?.userTypes || '',
+          },
+          userDetails: {
+            userDetailId: response.data.userDetails?.userDetailId || '',
+            details: response.data.userDetails?.details || '',
+            address: response.data.userDetails?.address || '',
+            phone: response.data.userDetails?.phone || '',
+          },
+          results: response.data.results || [],
+          courses: response.data.courses || [],
+        });
+        setLoading(false);
       } catch (err) {
         setError('Failed to fetch user details');
         setLoading(false);
       }
     };
 
-    fetchUserDetails();
+    fetchUser();
   }, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserDetails((prev) => ({ ...prev, [name]: value }));
+    setUser((prev) => ({
+      ...prev,
+      userDetails: {
+        ...prev.userDetails,
+        [name]: value,
+      },
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    console.log("Submit Data "+user);
+    
     try {
-      setTimeout(() => {
-        setLoading(false);
-        alert('User details updated successfully');
-      }, 1000);
+      await axios.put(`http://localhost:9999/api/users/${userId}`, user);
+      setLoading(false);
     } catch (err) {
       setError('Failed to update user details');
       setLoading(false);
     }
   };
 
-  if (loading && !userDetails.details) {
+  if (loading && !user.userDetails.details) {
     return (
       <div
         className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
       >
-        <Loader/>
-        {/* <div
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-lg"
-          style={{ padding: '2rem' }}
-        >
-          <div className="text-center text-indigo-600 text-xl font-semibold animate-pulse">
-            Loading...
-          </div>
-        </div> */}
+        <Loader />
       </div>
     );
   }
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
+      className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
       style={{ padding: '1.5rem' }}
     >
       <form
@@ -102,7 +128,7 @@ const EditUserDetails = ({ userId = 4 }) => {
             <textarea
               id="details"
               name="details"
-              value={userDetails.details}
+              value={user.userDetails.details}
               onChange={handleChange}
               style={{
                 width: '100%',
@@ -125,7 +151,7 @@ const EditUserDetails = ({ userId = 4 }) => {
               type="text"
               id="address"
               name="address"
-              value={userDetails.address}
+              value={user.userDetails.address}
               onChange={handleChange}
               style={{
                 width: '100%',
@@ -147,7 +173,7 @@ const EditUserDetails = ({ userId = 4 }) => {
               type="text"
               id="phone"
               name="phone"
-              value={userDetails.phone}
+              value={user.userDetails.phone}
               onChange={handleChange}
               style={{
                 width: '100%',

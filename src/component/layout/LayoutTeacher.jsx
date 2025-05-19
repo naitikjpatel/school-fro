@@ -2,8 +2,9 @@ import { Outlet } from "react-router";
 import { useState } from "react";
 import Sidebar from "../Sidebar";
 import Header from "../Header";
+import SidebarTeacher from "../SidebarTeacher";
 
-const LayoutStudent = () => {
+const LayoutTeacher = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -13,7 +14,7 @@ const LayoutStudent = () => {
   return (
     <div className="flex w-full min-h-screen">
       {/* Header */}
-      <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <SidebarTeacher isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       {/* Sidebar + Main Content */}
       <div className="w-[100%] flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
@@ -28,4 +29,4 @@ const LayoutStudent = () => {
   );
 };
 
-export default LayoutStudent;
+export default LayoutTeacher;

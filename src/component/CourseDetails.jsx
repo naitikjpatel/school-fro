@@ -35,7 +35,7 @@ const CourseDetails = ({ userId = 4 }) => {
   }
 
   return (
-    <div className="mx-auto h-screen w-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-lg rounded-lg" style={{ marginTop: '50px', padding: '20px' }}>
+    <div className="mx-auto h-screen  bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-lg rounded-lg" style={{  padding: '20px' }}>
       <div className="text-center mb-8">
       {courses.map((courseItem, index) => (
         <div key={index} className="mb-8">
