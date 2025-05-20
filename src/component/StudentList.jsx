@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import Modal from "./Modal";
+import AddStudentFormModal from "./AddStudentFormModal";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -10,7 +11,8 @@ const StudentList = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  
   // Fetch students from the API
   useEffect(() => {
     const fetchStudents = async () => {
@@ -66,7 +68,8 @@ const StudentList = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const openModal = (student) => {
+  const 
+  openModal = (student) => {
     setSelectedStudent(student);
     setIsModalOpen(true);
   };
@@ -84,10 +87,10 @@ const StudentList = () => {
     <h1 className="font-bold text-3xl items-center" style={{marginBottom:"20px"}}>Student List</h1>
     <button
         className="mb-4 px-4 py-2 bg-green-500 text-white rounded"
-        onClick={() => console.log('Navigate to Add New Course')}
-    >
+        onClick={() => setIsAddModalOpen(true)}
+      >
         Add Student
-    </button>
+      </button>
       <table className="min-w-full table-auto border">
         <thead className="bg-indigo-600 text-white">
           <tr>
@@ -211,6 +214,27 @@ const StudentList = () => {
         onClose={closeModal}
         student={selectedStudent}
       />
+
+
+{isAddModalOpen && (
+        <div className="fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white  rounded-lg w-full max-w-xl">
+            {/* <button
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              onClick={() => setIsAddModalOpen(false)}
+            >
+              
+            </button> */}
+            <AddStudentFormModal
+              onClose={() => setIsAddModalOpen(false)}
+              onSuccess={() => {
+                setIsAddModalOpen(false);
+                fetchStudents(); // refresh list
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

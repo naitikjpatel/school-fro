@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CourseDetails = ({ userId = 4 }) => {
+const CourseDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

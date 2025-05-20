@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loader from './Loader';
 
-const EditUserDetails = ({ userId = 5 }) => {
+const EditUserDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
   const [user, setUser] = useState({
     userId: '',
     firstName: '',

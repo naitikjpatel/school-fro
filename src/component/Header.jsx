@@ -1,6 +1,39 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+const Header = ({ toggleSidebar, userId = Number(localStorage.getItem("userId")) }) => {
+  const [user, setUser] = useState({
+    userId: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    userType: {
+      userTypeId: '',
+      userTypes: ''
+    },
+    userDetails: {
+      userDetailId: '',
+      details: '',
+      address: '',
+      phone: ''
+    },
+    results: [],
+    courses: []
+  });
 
-const Header = ({ toggleSidebar, userId = 4 }) => {
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:9999/api/users/${userId}`);
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
     <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center w-full " > 
       {/* Left section with logo and hamburger */}
@@ -35,7 +68,7 @@ const Header = ({ toggleSidebar, userId = 4 }) => {
 
       {/* Right section with user name */}
       <div className="text-base md:text-lg font-medium text-indigo-800">
-        John Doe
+        {user.firstName}&nbsp;  {user.lastName}
       </div>
     </header>
   );

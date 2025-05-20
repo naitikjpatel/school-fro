@@ -55,6 +55,7 @@ const LoginForm = () => {
      console.log("Login successful", response.data);
       setUser(response.data);
       setSuccess(true);
+      localStorage.setItem("userId", response.data.userId);
       if (response.data.userType.userTypes === "Student" ) {
       navigate("/layoutstudent")
       }

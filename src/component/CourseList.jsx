@@ -4,14 +4,18 @@ import axios from 'axios';
 import { PencilIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Modal from './Modal';
 import CourseModal from './CourseModel';
+import AddCourseModal from './AddCourseModal';
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage] = useState(7);
+  const [coursesPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false); // State to control modal visibility
+
+//   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -55,11 +59,37 @@ const CourseList = () => {
     setSelectedCourse(course);
     setIsModalOpen(true);
   };
-
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedCourse(null);
   };
+  
+  const handleSave = async (updatedCourse) => {
+    try {
+      await axios.put('http://localhost:9999/api/course/updateCourse', updatedCourse);
+      setCourses((prevCourses) =>
+        prevCourses.map((course) =>
+          course.courseId === updatedCourse.courseId ? updatedCourse : course
+        )
+      );
+    } catch (error) {
+      console.error('Error updating course:', error);
+    }
+  };
+  
+
+  const handleAddCourse = (newCourse) => {
+    setCourses((prevCourses) => [newCourse, ...prevCourses]);
+  };
+
+//   const openAddCourseModal = () => {
+//     setIsAddCourseModalOpen(true);
+//   };
+
+//   const closeAddCourseModal = () => {
+//     setIsAddCourseModalOpen(false);
+//   };
 
 return (
     <div
@@ -69,7 +99,7 @@ return (
         <h1 className="font-bold text-3xl items-center" style={{marginBottom:"20px"}}>Course List</h1>
         <button
             className="mb-4 px-4 py-2 bg-green-500 text-white rounded"
-            onClick={() => console.log('Navigate to Add New Course')}
+            onClick={() => setIsAddCourseModalOpen(true)}
         >
             Add New Course
         </button>
@@ -95,11 +125,11 @@ return (
                             <td className="py-3 px-6 text-sm text-gray-700">{course.courseDescription == null ? '-':course.courseDescription}</td>
                             <td className="py-3 px-6 text-sm text-gray-700">
                                 <div className="flex space-x-2">
-                                    <button onClick={() => openModal(course)} className="text-blue-500">
+                                    {/* <button className="text-blue-500">
                                         <EyeIcon className="h-5 w-5" />
-                                    </button>
-                                    <button className="text-yellow-500">
-                                        <PencilIcon className="h-5 w-5" />
+                                    </button> */}
+                                    <button onClick={() => openModal(course)}  className="text-yellow-500">
+                                        <PencilIcon className="h-5 w-5 mr-3" />
                                     </button>
                                     <button onClick={() => handleDelete(course.courseId)} className="text-red-500">
                                         <TrashIcon className="h-5 w-5" />
@@ -164,7 +194,19 @@ return (
             </div>
         </div>
 
-        <CourseModal isOpen={isModalOpen} onClose={closeModal} course={selectedCourse} />
+        <CourseModal
+  isOpen={isModalOpen}
+  onClose={closeModal}
+  course={selectedCourse}
+  onSave={handleSave}
+/>
+
+<AddCourseModal
+        isOpen={isAddCourseModalOpen}
+        onClose={() => setIsAddCourseModalOpen(false)} // Close the modal
+        onAddCourse={handleAddCourse}
+      />
+
     </div>
 );
 };

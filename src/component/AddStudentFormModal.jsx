@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ClockLoader } from "react-spinners";
 
-const AddStudentForm = () => {
+const AddStudentFormModal = ({ onClose, onSuccess }) => {
+  const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -13,9 +14,13 @@ const AddStudentForm = () => {
       phone: "",
     },
     userType: {
-      userTypeId: 0,
+      userTypeId: 1,
     },
+    courseId: -1, // Store selected course ID
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,8 +42,13 @@ const AddStudentForm = () => {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const handleCourseChange = (e) => {
+    const { value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      courseId: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,11 +57,11 @@ const AddStudentForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:9999/api/users/addUser",
+        `http://localhost:9999/api/users/addUser/${formData.courseId}`,
         formData
       );
       console.log("Form Data Submitted:", response.data);
-      // Handle successful submission (e.g., redirect or show success message)
+      onSuccess?.();
     } catch (err) {
       setError("An error occurred while submitting the form.");
       console.error("Error:", err);
@@ -60,11 +70,32 @@ const AddStudentForm = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:9999/api/course/getAllCourse"
+        );
+        setCourses(response.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    if (formData.courseId !== -1) {
+      console.log("Selected Course ID:", formData.courseId);
+    }
+  }, [formData.courseId]);
+
   return (
-    <div className="flex justify-center items-center min-h-screen w-screen h-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
+    <div className="flex justify-center items-center fitted border-1 rounded-lg">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 hover:shadow-3xl"
+        className="bg-white rounded-2xl w-full max-w-lg transform transition-all duration-300"
         style={{ padding: "10px 20px" }}
       >
         <h2
@@ -79,7 +110,8 @@ const AddStudentForm = () => {
         )}
 
         <div className="space-y-6">
-          <div className="flex flex-col gap-1">
+          {/* Other form fields */}
+          <div className="flex flex-col ">
             <label
               htmlFor="firstName"
               className="block text-md font-medium text-gray-800 mb-1"
@@ -95,11 +127,11 @@ const AddStudentForm = () => {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter first name"
               required
-              style={{ padding: "10px 20px", marginBottom: "7px" }}
+              style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label
               htmlFor="lastName"
               className="block text-md font-medium text-gray-800 mb-1"
@@ -115,11 +147,11 @@ const AddStudentForm = () => {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter last name"
               required
-              style={{ padding: "10px 20px", marginBottom: "7px" }}
+              style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label
               htmlFor="email"
               className="block text-md font-medium text-gray-800 mb-1"
@@ -135,11 +167,11 @@ const AddStudentForm = () => {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter email address"
               required
-              style={{ padding: "10px 20px", marginBottom: "7px" }}
+              style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label
               htmlFor="userDetails.address"
               className="block text-md font-medium text-gray-800 mb-1"
@@ -155,11 +187,11 @@ const AddStudentForm = () => {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter address"
               required
-              style={{ padding: "10px 20px", marginBottom: "7px" }}
+              style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label
               htmlFor="userDetails.phone"
               className="block text-md font-medium text-gray-800 mb-1"
@@ -175,40 +207,47 @@ const AddStudentForm = () => {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter phone number"
               required
-              style={{ padding: "10px 20px", marginBottom: "7px" }}
+              style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label
-              htmlFor="userType.userTypeId"
+              htmlFor="courseId"
               className="block text-md font-medium text-gray-800 mb-1"
             >
-              User Type
+              Assign Course
             </label>
             <select
-              id="userType.userTypeId"
-              name="userType.userTypeId"
-              value={formData.userType.userTypeId}
-              onChange={handleChange}
+              id="courseId"
+              name="courseId"
+              value={formData.courseId}
+              onChange={handleCourseChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 bg-white transition-all duration-200"
               required
-              style={{ padding: "10px 20px", marginBottom: "15px" }}
+              style={{ padding: "10px 20px", marginBottom: "10px" }}
             >
-              <option value={0} disabled>
-                Select user type
-              </option>
-              <option value={1}>Student</option>
-              <option value={2}>Teacher</option>
+              <option value="">Select a course</option>
+              {courses.map((course) => (
+                <option key={course.courseId} value={course.courseId}>
+                  {course.courseName}
+                </option>
+              ))}
             </select>
           </div>
         </div>
 
-        <div className="mt-8 w-full flex justify-center items-center">
+        <div className="mt-8 w-full flex justify-center gap-3 items-center">
+          <button
+            type="button"
+            className="w-[25%] py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            style={{ padding: "10px 20px", marginBottom: "20px" }}
-            className="w-[70%] py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105"
+            className="w-[60%] py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105"
             disabled={loading}
           >
             {loading ? (
@@ -225,4 +264,4 @@ const AddStudentForm = () => {
   );
 };
 
-export default AddStudentForm;
+export default AddStudentFormModal;

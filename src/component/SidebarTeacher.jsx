@@ -14,8 +14,8 @@ const SidebarTeacher = ({ isSidebarOpen }) => {
         <ul className="flex flex-col gap-4 px-6">
           <SidebarItem to="/layoutteacher/studentlist" label="StudentList" />
           <SidebarItem to="/layoutteacher/courselist" label="CourseList" />
-          <SidebarItem to="/layoutstudent/results" label="Results" />
-          <SidebarItem to="/layoutstudent/editprofile" label="Edit Profile" />
+          <SidebarItem to="/layoutteacher/subjects" label="Subjects" />
+          <SidebarItem to="/layoutteacher/editprofile" label="Edit Profile" />
         </ul>
       </nav>
     </div>
