@@ -16,12 +16,12 @@ const LayoutTeacher = () => {
       {/* Header */}
       <SidebarTeacher isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       {/* Sidebar + Main Content */}
-      <div className="w-[100%] flex flex-col">
+      <div className="w-[100%]   flex flex-col overflow-y-auto">
         <Header toggleSidebar={toggleSidebar} />
         {/* Sidebar */}
 
         {/* Main Content */}
-        <main className="">
+        <main className="h-screen ">
           <Outlet />
         </main>
       </div>

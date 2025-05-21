@@ -3,6 +3,7 @@ import axios from "axios";
 import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import Modal from "./Modal";
 import AddStudentFormModal from "./AddStudentFormModal";
+import { Navigate, useNavigate } from "react-router";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -12,7 +13,7 @@ const StudentList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  
+  const navigate=useNavigate();
   // Fetch students from the API
   useEffect(() => {
     const fetchStudents = async () => {
@@ -81,7 +82,7 @@ const StudentList = () => {
 
   return (
     <div
-    className={`overflow-x-auto bg-white shadow-md rounded-lg mt-2 `}
+    className={`overflow-x-auto h-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-md rounded-lg mt-2 `}
     style={{ padding: '20px' }}
 >
     <h1 className="font-bold text-3xl items-center" style={{marginBottom:"20px"}}>Student List</h1>
@@ -133,7 +134,7 @@ const StudentList = () => {
                       <EyeIcon className="h-5 w-5" />
                     </button>
                     <button className="text-yellow-500"  style={{marginRight: "10px"}}>
-                      <PencilIcon className="h-5 w-5" />
+                      <PencilIcon className="h-5 w-5" onClick={()=> navigate(`/editresult/${student.userId}`)} />
                     </button>
                     <button
                       onClick={() => handleDelete(student.userId)}
@@ -214,17 +215,17 @@ const StudentList = () => {
         onClose={closeModal}
         student={selectedStudent}
       />
-
+ 
 
 {isAddModalOpen && (
         <div className="fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white  rounded-lg w-full max-w-xl">
-            {/* <button
+            <button
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
               onClick={() => setIsAddModalOpen(false)}
             >
               
-            </button> */}
+            </button>
             <AddStudentFormModal
               onClose={() => setIsAddModalOpen(false)}
               onSuccess={() => {

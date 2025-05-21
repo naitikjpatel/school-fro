@@ -9,8 +9,13 @@ const Modal = ({ isOpen, onClose, student }) => {
       className="fixed inset-0 z-50 bg-transparent bg-opacity-40 flex justify-center items-center px-4"
       onClick={onClose}
     >
+      {/* This Div For the Do BackGround Blur */}
+         <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        aria-hidden="true"
+      />
       <div
-        className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative animate-fadeIn"
+        className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 relative animate-fadeIn border-1"
         onClick={(e) => e.stopPropagation()}
       >
         {/* <button

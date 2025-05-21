@@ -92,10 +92,15 @@ const AddStudentFormModal = ({ onClose, onSuccess }) => {
   }, [formData.courseId]);
 
   return (
-    <div className="flex justify-center items-center fitted border-1 rounded-lg">
+    
+         <div 
+        className="fixed inset-0  bg-black/50 backdrop-blur-sm transition-opacity flex justify-center items-center w-full" 
+        aria-hidden="true"
+      >
+    <div className=" ">
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl w-full max-w-lg transform transition-all duration-300"
+        className="bg-white   border-1 rounded-lg w-full max-w-lg transform transition-all duration-300"
         style={{ padding: "10px 20px" }}
       >
         <h2
@@ -261,6 +266,8 @@ const AddStudentFormModal = ({ onClose, onSuccess }) => {
         {error && <p className="mt-4 text-red-600 text-center">{error}</p>}
       </form>
     </div>
+  </div>            
+    
   );
 };
 

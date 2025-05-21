@@ -20,7 +20,7 @@ const CourseDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
     };
 
     fetchCourseData();
-  }, [userId]);
+  }, []);
 
   if (loading) {
     return <div className="text-center text-indigo-800">Loading...</div>;

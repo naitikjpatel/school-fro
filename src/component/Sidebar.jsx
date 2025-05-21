@@ -13,7 +13,7 @@ const Sidebar = ({ isSidebarOpen }) => {
       <nav className="h-screen overflow-y-auto mt-6">
         <ul className="flex flex-col gap-4 px-6">
           <SidebarItem to="/layoutstudent/courses" label="Courses" />
-          <SidebarItem to="/subjects" label="Subjects" />
+          {/* <SidebarItem to="/subjects" label="Subjects" /> */}
           <SidebarItem to="/layoutstudent/results" label="Results" />
           <SidebarItem to="/layoutstudent/editprofile" label="Edit Profile" />
         </ul>

@@ -93,7 +93,7 @@ const CourseList = () => {
 
 return (
     <div
-        className={`overflow-x-auto bg-white shadow-md rounded-lg mt-2 `}
+        className={`overflow-x-auto bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-md rounded-lg mt-2  h-full`}
         style={{ padding: '20px' }}
     >
         <h1 className="font-bold text-3xl items-center" style={{marginBottom:"20px"}}>Course List</h1>

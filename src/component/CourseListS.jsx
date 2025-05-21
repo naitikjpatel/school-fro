@@ -12,7 +12,7 @@ const CourseListS = () => {
   }, []);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100">
       {courses.map(course => (
         <CourseCard key={course.courseId} course={course} />
       ))}

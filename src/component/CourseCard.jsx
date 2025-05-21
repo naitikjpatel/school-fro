@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SubjectModal from './SubjectModal';
 import axios from 'axios';
+import { div } from 'framer-motion/client';
 
 const CourseCard = ({ course }) => {
   const [showModal, setShowModal] = useState(false);
@@ -32,10 +33,13 @@ const CourseCard = ({ course }) => {
 
       <p className="text-gray-600 mb-2">{course.courseDescription}</p>
 
-      <ul className="list-disc ml-6 text-gray-700">
+      <ul className="list-disc ml-6 text-gray-700" style={{
+        listStyleType: 'disc',
+      }}>
         {course.subjects.length > 0 ? (
+          
           course.subjects.map(sub => (
-            <li key={sub.subjectId} className="flex justify-between items-center py-1">
+            <li key={sub.subjectId} className="flex justify-between items-center py-1 ">
               {sub.subjectName}
               <button
                 onClick={() => handleDeleteSubject(sub.subjectId)}

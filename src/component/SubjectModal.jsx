@@ -27,7 +27,14 @@ const SubjectModal = ({ courseId, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-opacity-30 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+
+
+      {/* This Div For the Do BackGround Blur */}
+      <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        aria-hidden="true"
+      />
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative border-1 animate-fadeIn">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Add New Subject</h3>
 
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}

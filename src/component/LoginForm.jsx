@@ -56,6 +56,7 @@ const LoginForm = () => {
       setUser(response.data);
       setSuccess(true);
       localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("role", response.data.userType.userTypes);
       if (response.data.userType.userTypes === "Student" ) {
       navigate("/layoutstudent")
       }
@@ -64,7 +65,7 @@ const LoginForm = () => {
       }
       
     } catch (err) {
-     const errorMessage = err.response?.data?.message || err.message || "Login failed";
+     const errorMessage = err.response?.data?.message || "Login failed";
       setError(errorMessage);
       console.error("Login error:", err);
     } finally {

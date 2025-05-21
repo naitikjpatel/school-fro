@@ -9,7 +9,8 @@ const UserResults = ({ userId = Number(localStorage.getItem("userId") )}) => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await axios.get(`http://localhost:9999/api/users/${userId}/results`);
+        // const response = await axios.get(`http://localhost:9999/api/users/${userId}/results`);
+        const response=await axios.get(`http://localhost:9999/api/result/student/${userId}`);
         setResults(response.data);
       } catch (err) {
         setError('Failed to fetch results');
@@ -25,19 +26,42 @@ const UserResults = ({ userId = Number(localStorage.getItem("userId") )}) => {
   if (error) return <div className="text-center text-red-600">{error}</div>;
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-6">
-      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-6">
+    <div className="flex justify-center h-full bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-6">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-6 h-fit">
         <h3 className="text-2xl font-semibold text-center text-indigo-800 mb-6">User Results</h3>
-        <div className="space-y-4">
-          {results.map((result, index) => (
-            <div key={index} className="p-4 bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex justify-between">
-              <h4 className="text-lg font-medium text-indigo-700 inline-block ">{result.subjectName}</h4>
-              <p className={`mt-2 text-sm font-semibold inline-block ${result.status === 'Pass' || 'pass' ? 'text-green-500' : 'text-red-500'}`}>
-                {result.status}
-              </p>
-            </div>
-          ))}
-        </div>
+        <table className="table-auto w-full border-collapse border border-gray-200 " >
+          <thead>
+            <tr className="bg-indigo-100">
+              <th className="border border-gray-300 px-4 py-2 text-indigo-800">Subject</th>
+              <th className="border border-gray-300 px-4 py-2 text-indigo-800">Exam</th>
+              <th className="border border-gray-300 px-4 py-2 text-indigo-800">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((result, index) => (
+              <tr
+                key={index}
+                className="hover:bg-gray-100 transition-colors duration-300"
+              >
+                <td className="border border-gray-300 px-4 py-2 text-indigo-700">
+                  {result.subjectName}
+                </td>
+                <td className="border border-gray-300 px-4 py-2 text-indigo-700 text-center">
+                  {result.examName}
+                </td>
+                <td
+                  className={`border border-gray-300 px-4 py-2 text-right font-semibold ${
+                    result.status.toLowerCase() === 'pass'
+                      ? 'text-green-500'
+                      : 'text-red-500'
+                  }`}
+                >
+                  {result.status}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

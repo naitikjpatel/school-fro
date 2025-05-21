@@ -33,6 +33,11 @@ const AddCourseModal = ({ isOpen, onClose, onAddCourse }) => {
       className="fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center p-4 "
       onClick={onClose}
     >
+       {/* This Div For the Do BackGround Blur */}
+       <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        aria-hidden="true"
+      /> 
       <div
         className="bg-white shadow-xl max-w-lg w-full p-6 relative animate-fadeIn  border-1 rounded-lg"
         onClick={(e) => e.stopPropagation()}

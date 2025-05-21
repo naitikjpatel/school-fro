@@ -12,6 +12,7 @@ import LayoutTeacher from "./component/layout/LayoutTeacher";
 import CourseList from "./component/CourseList";
 import AddStudentFormModal from "./component/AddStudentFormModal";
 import CourseListS from "./component/CourseListS";
+import UserExamResultModal from "./component/UserExamResultModal";
 function App() {
   return (
     <>
@@ -28,11 +29,17 @@ function App() {
             <Route path="editprofile" element={<EditUserDetails />} />
           </Route>
 
+
+            {/* This is For the Teacher Dashboard */}
+            <Route path="editresult/:userId" element={<UserExamResultModal/>}/>
           <Route path="/layoutteacher" element={<LayoutTeacher />}>
             {/* <Route index  element={<StudentList />} /> */}
             <Route index path="studentlist" element={<StudentList />} />
-            <Route index path="courselist" element={<CourseList />} />
-            <Route index path="subjects" element={<CourseListS />} />
+            <Route  path="courselist" element={<CourseList />} />
+            
+            {/* This route showing courseList according with it's subject */}
+            <Route  path="subjects" element={<CourseListS />} />
+            
           </Route>
           <Route path="*" element={<div>404 Page Not Found</div>} />
         </Routes>
