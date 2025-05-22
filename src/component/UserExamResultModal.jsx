@@ -30,7 +30,7 @@ const UserExamResultModal = () => {
         courseDescription: "",
         subjects: [
           {
-            subjectId: "",
+            subjectId: 0,
             subjectName: "",
           },
         ],
@@ -41,49 +41,64 @@ const UserExamResultModal = () => {
   const [error, setError] = useState(null);
   const [isOpenExamAndResult, setIsOpenExamAndResult] = useState(false);
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(
+        const userResponse = await axios.get(
           `http://localhost:9999/api/users/${userId}`
         );
+        const userData = userResponse.data;
+
+        // Fetch exam results for each subject
+        const subjectsWithResults = await Promise.all(
+          userData.courses.flatMap((course) =>
+            course.subjects.map(async (subject) => {
+              try {
+                // Fetch results for the user and subject
+                const resultResponse = await axios.get(
+                  `http://localhost:9999/api/result/student/${userId}?subjectId=${subject.subjectId}`
+                );
+                const results = resultResponse.data;
+        
+                // Filter results to match the current subjectId
+                const filteredResults = results.filter(
+                  (result) => result.subjectId === subject.subjectId
+                );
+        
+                // Return the subject with the filtered results
+                return {
+                  ...subject,
+                  results: filteredResults,
+                };
+              } catch (error) {
+                console.error(`Error fetching results for subject ${subject.subjectId}:`, error);
+                return {
+                  ...subject,
+                  results: [], // Return empty results in case of error
+                };
+              }
+            })
+          )
+        );
+
+        console.log("Subject with results",subjectsWithResults);
+        
+        
+
         setUser({
-          userId: response.data.userId || "",
-          firstName: response.data.firstName || "",
-          lastName: response.data.lastName || "",
-          email: response.data.email || "",
-          userType: {
-            userTypeId: response.data.userType?.userTypeId || "",
-            userTypes: response.data.userType?.userTypes || "",
-          },
-          userDetails: {
-            userDetailId: response.data.userDetails?.userDetailId || "",
-            details: response.data.userDetails?.details || "",
-            address: response.data.userDetails?.address || "",
-            phone: response.data.userDetails?.phone || "",
-          },
-          results: response.data.results || [],
-          courses: response.data.courses?.length
-            ? response.data.courses.map((course) => ({
-                courseId: course.courseId || "",
-                courseName: course.courseName || "",
-                courseDescription: course.courseDescription || "",
-                subjects: course.subjects?.length
-                  ? course.subjects.map((subject) => ({
-                      subjectId: subject.subjectId || "",
-                      subjectName: subject.subjectName || "",
-                    }))
-                  : [{ subjectId: "", subjectName: "" }],
-              }))
-            : [
-                {
-                  courseId: "",
-                  courseName: "",
-                  courseDescription: "",
-                  subjects: [{ subjectId: "", subjectName: "" }],
-                },
-              ],
+          ...userData,
+          courses: userData.courses.map((course, courseIndex) => ({
+            ...course,
+            subjects: course.subjects.map((subject, subjectIndex) => {
+              const subjectWithResults = subjectsWithResults.find(
+                (s) => s.subjectId === subject.subjectId
+              );
+              return {
+                ...subject,
+                results: subjectWithResults ? subjectWithResults.results : [],
+              };
+            }),
+          })),
         });
         setLoading(false);
       } catch (err) {
@@ -93,52 +108,7 @@ const UserExamResultModal = () => {
     };
 
     fetchUser();
-  }, [userId]);
-
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setUser((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   };
-
-  //   const handleNestedChange = (e, nestedField) => {
-  //     const { name, value } = e.target;
-  //     setUser((prev) => ({
-  //       ...prev,
-  //       [nestedField]: {
-  //         ...prev[nestedField],
-  //         [name]: value,
-  //       },
-  //     }));
-  //   };
-
-  //   const handleCourseChange = (e, index) => {
-  //     const { name, value } = e.target;
-  //     setUser((prev) => {
-  //       const updatedCourses = [...prev.courses];
-  //       updatedCourses[index] = { ...updatedCourses[index], [name]: value };
-  //       return { ...prev, courses: updatedCourses };
-  //     });
-  //   };
-
-  //   const handleSubjectChange = (e, courseIndex, subjectIndex) => {
-  //     const { name, value } = e.target;
-  //     setUser((prev) => {
-  //       const updatedCourses = [...prev.courses];
-  //       const updatedSubjects = [...updatedCourses[courseIndex].subjects];
-  //       updatedSubjects[subjectIndex] = {
-  //         ...updatedSubjects[subjectIndex],
-  //         [name]: value,
-  //       };
-  //       updatedCourses[courseIndex] = {
-  //         ...updatedCourses[courseIndex],
-  //         subjects: updatedSubjects,
-  //       };
-  //       return { ...prev, courses: updatedCourses };
-  //     });
-  //   };
+  }, [userId,isOpenExamAndResult]);
 
   const openExamAndResultModal = (subjectId) => {
     setSelectedSubjectId(subjectId);
@@ -149,21 +119,6 @@ const UserExamResultModal = () => {
     setIsOpenExamAndResult(false);
     setSelectedSubjectId(null);
   };
-
-  //   const handleSubmit = async (e) => {
-  //     e.preventDefault();
-  //     setLoading(true);
-  //     setError(null);
-  //
-  //     try {
-  //       await axios.put(`http://localhost:9999/api/users/${userId}`, user);
-  //       setLoading(false);
-  //       alert("User details updated successfully");
-  //     } catch (err) {
-  //       setError("Failed to update user details");
-  //       setLoading(false);
-  //     }
-  //   };
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
@@ -188,7 +143,7 @@ const UserExamResultModal = () => {
             </label>
             <div className="mt-1 p-2 w-full border border-slate-300 rounded-md bg-slate-200 text-slate-800">
               {user.lastName}
-            </div>
+            </div>  
           </div>
 
           <div className="mb-4">
@@ -206,45 +161,61 @@ const UserExamResultModal = () => {
               className="mb-6 border-t border-slate-300 pt-4"
             >
               <h3 className="text-lg font-semibold text-slate-700 mb-2">
-                Course 
+                {course.courseName}
               </h3>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-slate-600">
-                  Course Name
-                </label>
-                <div className="mt-1 p-2 w-full border border-slate-300 rounded-md bg-slate-200 text-slate-800">
-                  {course.courseName}
-                </div>
-              </div>
 
               {course.subjects.map((subject, subjectIndex) => (
                 <div key={subjectIndex} className="ml-4 mb-4">
-                  <h4 className="text-md font-medium text-slate-700 mb-2">
-                    Subject 
-                  </h4>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-slate-600">
-                      Subject Name
-                    </label>
-                    <div className="flex items-center justify-between">
-                      <div className="mt-1 p-2 w-[70%] border border-slate-300 rounded-md bg-slate-200 text-slate-800">
-                        {subject.subjectName}
-                      </div>
-                      <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white rounded ms-2 me-2 px-3 py-2"
-                        onClick={() =>
-                          openExamAndResultModal
-                          (Number(subject.subjectId))
-                        }
-                      >
-                         Exam & Result
-                      </button>
-
-                      {/* <button className=" bg-indigo-600 hover:bg-indigo-700 text-white rounded px-3 py-2">
-                        Add Result
-                      </button> */}
+                    {/* <h4 className="text-md font-medium text-slate-700 mb-2">
+                      {subject.subjectName}
+                    </h4> */}
+                  <div className="flex items-center justify-between">
+                    <div className="mt-1 p-2 w-[70%] border border-slate-300 rounded-md bg-slate-200 text-slate-800">
+                      {subject.subjectName}
                     </div>
+                    
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white rounded ms-2 me-2 px-3 py-2"
+                      onClick={() => openExamAndResultModal(subject.subjectId)}
+                    >
+                      Exam & Result
+                    </button>
+                  </div>
+                  <div className="mt-2">
+                    <h5 className="text-sm font-medium text-slate-600 ms-3">
+                      Exam Results:
+                    </h5>
+                    {subject.results.length > 0 ? (
+                      subject.results.map((result, resultIndex) => (
+                        
+                        <div
+                          key={resultIndex}
+                          className="mt-1 p-2 border border-slate-300 rounded-md ms-3"
+                        >
+                          <div className="flex justify-between">
+                            <span className="font-semibold">
+                              {result.examName}
+                            </span>
+                            <span
+                              className={`font-semibold ${
+                                result.status === "pass"
+                                  ? "text-green-600"
+                                  : "text-red-600"
+                              }`}
+                            >
+                              {result.status === "pass" ? "Passed" : "Failed"}
+                            </span>
+                          </div>
+                          <div className="text-sm text-slate-500">
+                            {new Date(result.resultDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-slate-500 ms-3">
+                        No results available
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -264,14 +235,13 @@ const UserExamResultModal = () => {
       </div>
 
       {isOpenExamAndResult && (
-  <ExamAndResultModal
-    isOpen={isOpenExamAndResult}
-    onClose={closeExamAndResultModal}
-    userId={Number(userId)}
-    subjectId={selectedSubjectId}
-  />
-)}
-
+        <ExamAndResultModal
+          isOpen={isOpenExamAndResult}
+          onClose={closeExamAndResultModal}
+          userId={Number(userId)}
+          subjectId={selectedSubjectId}
+        />
+      )}
     </div>
   );
 };

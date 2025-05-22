@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const ExamAndResultModal = ({ isOpen, onClose, subjectId }) => {
+const ExamAndResultModal = ({ isOpen, onClose, subjectId ,userId}) => {
   const [subject, setSubject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [examResults, setExamResults] = useState([]); // To track the results
 
   useEffect(() => {
     if (!isOpen) return;
@@ -15,6 +16,12 @@ const ExamAndResultModal = ({ isOpen, onClose, subjectId }) => {
           `http://localhost:9999/api/subject/${subjectId}`
         );
         setSubject(response.data);
+        // Initialize exam results state with the existing data
+        const initialResults = response.data.exam.map((exam) => ({
+          examId: exam.examId,
+          examResult: "", // Default result for each exam
+        }));
+        setExamResults(initialResults);
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch subject data");
@@ -25,56 +32,47 @@ const ExamAndResultModal = ({ isOpen, onClose, subjectId }) => {
     fetchSubject();
   }, [isOpen, subjectId]);
 
-  const handleChange = (e, examIndex, typeIndex = null) => {
-    const { name, value } = e.target;
-    setSubject((prevSubject) => {
-      const updatedSubject = { ...prevSubject };
-
-      if (examIndex !== null) {
-        const updatedExams = [...updatedSubject.exam];
-        const updatedExam = { ...updatedExams[examIndex] };
-
-        if (typeIndex !== null) {
-          const updatedExamTypes = [...updatedExam.examType];
-          updatedExamTypes[typeIndex] = {
-            ...updatedExamTypes[typeIndex],
-            result: value,
-          };
-          updatedExam.examType = updatedExamTypes;
-        } else {
-          updatedExam.examResult = value;
-        }
-
-        updatedExams[examIndex] = updatedExam;
-        updatedSubject.exam = updatedExams;
-      } else {
-        updatedSubject[name] = value;
-      }
-
-      return updatedSubject;
-    });
+  
+  const handleChange = (e, examIndex) => {
+    const updatedResults = [...examResults];
+    updatedResults[examIndex].examResult = e.target.value;
+    setExamResults(updatedResults);
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const currentDate = new Date().toISOString(); 
     try {
-      await axios.put(
-        `http://localhost:9999/api/subject/${subjectId}`,
-        subject
-      );
-      alert("Subject updated successfully");
+     
+      const resultsToSubmit = examResults.map((examResult) => ({
+        status: examResult.examResult,
+        resultDate: currentDate,
+        users: { userId: userId }, 
+        exam: { examId: examResult.examId },
+      }));
+
+      console.log("Results to submit:", resultsToSubmit);
+      
+     
+      await axios.post("http://localhost:9999/api/result/addResult", resultsToSubmit);
+      alert("Results saved successfully!");
       onClose();
     } catch (err) {
-      setError("Failed to update subject");
+
+      setError("Failed to submit results");
     }
   };
-
+  
+  
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-6 shadow-lg w-96 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Edit Subject {subjectId}</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Edit Subject Exam & Result {subjectId}
+        </h2>
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -85,31 +83,41 @@ const ExamAndResultModal = ({ isOpen, onClose, subjectId }) => {
               <label className="block text-sm font-medium text-gray-700">
                 Subject Name
               </label>
-              <input
-                type="text"
-                name="subjectName"
-                value={subject.subjectName}
-                onChange={(e) => handleChange(e, null)}
-                className="mt-1 p-2 w-full border rounded-md"
-              />
+              <div className="mt-1 p-2 w-full border rounded-md">
+                {subject.subjectName}
+              </div>
             </div>
 
             {subject.exam.map((exam, examIndex) => (
               <div key={examIndex} className="mt-2">
-              
-
                 <div className="mt-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Exam Types
-                  </label>
+                  <div className="flex justify-between">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Exam Types
+                    </label>
+                    <label className="block text-sm font-medium text-gray-700 me-[28%]">
+                      Result
+                    </label>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className=" h-fit mt-1 p-2 w-[50%] border rounded-md">
+                      {exam.examType.examTypeName || ""}
+                    </div>
 
-                  <input
-                    type="text"
-                    
-                    value={exam.examType.examTypeName || ""}
-                   
-                    className="mt-1 p-2 w-full border rounded-md"
-                  />
+                    <div className="">
+                      <select
+                        className="mt-1 p-[10px] w-full border rounded-md"
+                        value={examResults[examIndex]?.examResult || ""}
+                        onChange={(e) => handleChange(e, examIndex)}
+                        name="examResult"
+                        required
+                      >
+                        <option value="">Select Result</option>
+                        <option value="pass">Pass</option>
+                        <option value="fail">Fail</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

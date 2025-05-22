@@ -13,14 +13,12 @@ const LayoutTeacher = () => {
 
   return (
     <div className="flex w-full min-h-screen">
-      {/* Header */}
+      
       <SidebarTeacher isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      {/* Sidebar + Main Content */}
+      
       <div className="w-[100%]   flex flex-col overflow-y-auto">
         <Header toggleSidebar={toggleSidebar} />
-        {/* Sidebar */}
-
-        {/* Main Content */}
+       
         <main className="h-screen ">
           <Outlet />
         </main>

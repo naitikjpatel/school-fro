@@ -191,7 +191,7 @@ const AddStudentFormModal = ({ onClose, onSuccess }) => {
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-500 text-gray-700 transition-all duration-200"
               placeholder="Enter address"
-              required
+              
               style={{ padding: "10px 20px", marginBottom: "4px" }}
             />
           </div>

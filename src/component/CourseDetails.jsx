@@ -11,7 +11,6 @@ const CourseDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
       try {
         const response = await axios.get(`http://localhost:9999/api/users/${userId}`);
         setCourses(response.data.courses);
-        console.log(response.data.courses);
       } catch (err) {
         setError('Failed to fetch course data');
       } finally {
@@ -20,7 +19,7 @@ const CourseDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
     };
 
     fetchCourseData();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return <div className="text-center text-indigo-800">Loading...</div>;
@@ -35,36 +34,28 @@ const CourseDetails = ({ userId = Number(localStorage.getItem("userId")) }) => {
   }
 
   return (
-    <div className="mx-auto h-screen  bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-lg rounded-lg" style={{  padding: '20px' }}>
-      <div className="text-center mb-8">
-      {courses.map((courseItem, index) => (
-        <div key={index} className="mb-8">
-          <h2 className="text-2xl font-semibold text-indigo-800 mb-4">{index+1}.{courseItem.courseName}</h2>
+    <div className="mx-auto w-full h-screen px-4 py-8 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 shadow-lg rounded-lg">
+      <div className="space-y-8 border rounded-md">
+        {courses.map((courseItem, index) => (
+          <div key={courseItem.courseId} className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold text-indigo-800 mb-4">{index + 1}. {courseItem.courseName}</h2>
+            <p className="text-gray-700 mb-6">{courseItem.courseDescription || 'No description available.'}</p>
 
-          <p className="text-gray-700 mb-6 font-bold">
-            Course Description: {courseItem.courseDescription || '-'}
-          </p>
-
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-indigo-600">Subjects</h3>
-            <ul className="max-md:divide-y max-md:divide-gray-300">
-              {courseItem.subjects.map((subject,index) => (
-                <li key={subject.subjectId} className="py-2">
-                  <span className="text-lg text-gray-800">{index+1}.{subject.subjectName}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="space-y-2 ms-3">
+              <h3 className="text-xl font-semibold text-indigo-600">Subjects</h3>
+              <ul className="space-y-1 ms-4  list-disc ">
+                {courseItem.subjects.map((subject,index) => (
+                  <li key={subject.subjectId} className=" items-center space-x-2 list-item">
+                    <span className="text-lg text-gray-800">{index+1}. {subject.subjectName}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-
-          {/* Divider between courses */}
-          {index < courses.length - 1 && <hr className="my-6 border-t-2 border-gray-300" style={{margin:'20px'}}/>}
-        </div>
-      ))}
+        ))}
       </div>
     </div>
   );
 };
 
 export default CourseDetails;
-
-

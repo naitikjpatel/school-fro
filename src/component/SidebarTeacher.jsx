@@ -15,7 +15,7 @@ const SidebarTeacher = ({ isSidebarOpen }) => {
           <SidebarItem to="/layoutteacher/studentlist" label="StudentList" />
           <SidebarItem to="/layoutteacher/courselist" label="CourseList" />
           <SidebarItem to="/layoutteacher/subjects" label="Subjects" />
-          <SidebarItem to="/layoutteacher/editprofile" label="Edit Profile" />
+          {/* <SidebarItem to="/layoutteacher/editprofile" label="Edit Profile" /> */}
         </ul>
       </nav>
     </div>
