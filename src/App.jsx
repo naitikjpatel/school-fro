@@ -11,7 +11,7 @@ import StudentList from "./component/StudentList";
 import LayoutTeacher from "./component/layout/LayoutTeacher";
 import CourseList from "./component/CourseList";
 import AddStudentFormModal from "./component/AddStudentFormModal";
-import CourseListS from "./component/CourseListWithSubject";
+import CourseListS from "./component/CourseListS";
 import UserExamResultModal from "./component/UserExamResultModal";
 function App() {
   return (
