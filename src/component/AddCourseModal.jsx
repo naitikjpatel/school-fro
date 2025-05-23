@@ -16,6 +16,7 @@ const AddCourseModal = ({ isOpen, onClose, onAddCourse }) => {
         courseDescription,
       });
       onAddCourse(response.data);
+      alert("Course saved successfully!");
       onClose();
     } catch (error) {
       console.error('Error adding course:', error);

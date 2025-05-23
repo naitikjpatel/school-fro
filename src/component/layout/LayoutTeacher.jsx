@@ -28,7 +28,7 @@ const LayoutTeacher = () => {
         <Header toggleSidebar={toggleSidebar} />
 
         <main className="h-screen ">
-          <Outlet />
+          <Outlet/>
         </main>
       </div>
     </div>

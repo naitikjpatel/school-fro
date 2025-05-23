@@ -94,10 +94,10 @@ const AddStudentFormModal = ({ onClose, onSuccess }) => {
   return (
     
          <div 
-        className="fixed inset-0  bg-black/50 backdrop-blur-sm transition-opacity flex justify-center items-center w-full" 
+        className="fixed inset-0 z-50 bg-opacity-50 flex justify-center items-center p-4 " 
         aria-hidden="true"
       >
-    <div className=" ">
+    <div className=" fixed inset-0  bg-white/50 backdrop-blur-sm transition-opacity flex justify-center items-center w-full">
       <form
         onSubmit={handleSubmit}
         className="bg-white   border-1 rounded-lg w-full max-w-lg transform transition-all duration-300"
@@ -256,7 +256,7 @@ const AddStudentFormModal = ({ onClose, onSuccess }) => {
             disabled={loading}
           >
             {loading ? (
-              <ClockLoader size={25} color="#ffffff" loading={loading} />
+              <ClockLoader size={25}  className="m-auto" color="#ffffff" loading={loading} />
             ) : (
               "Add Student"
             )}

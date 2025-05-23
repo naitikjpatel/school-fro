@@ -15,7 +15,9 @@ const SubjectModal = ({ courseId, onClose }) => {
         subjectName,
         courseId
       });
+
       onClose(); // Close modal
+      alert("Subject saved successfully!");
       window.location.reload(); // Refresh course list
     } catch (err) {
       setError("Failed to add subject.");

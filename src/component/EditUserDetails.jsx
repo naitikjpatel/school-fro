@@ -78,6 +78,7 @@ const EditUserDetails = ({ userId = Number(localStorage.getItem("userId")) }) =>
     try {
       await axios.put(`http://localhost:9999/api/users/${userId}`, user);
       setLoading(false);
+      alert('UserDetails updated successfully!');
     } catch (err) {
       setError('Failed to update user details');
       setLoading(false);
@@ -96,7 +97,7 @@ const EditUserDetails = ({ userId = Number(localStorage.getItem("userId")) }) =>
 
   return (
     <div
-      className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100"
+      className="flex justify-center items-center h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100  rounded-lg"
       style={{ padding: '1.5rem' }}
     >
       <form

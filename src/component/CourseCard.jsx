@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SubjectModal from './SubjectModal';
 import axios from 'axios';
+import { TrashIcon } from '@heroicons/react/16/solid';
 
 const CourseCard = ({ course }) => {
   const [showModal, setShowModal] = useState(false);
@@ -21,7 +22,7 @@ const CourseCard = ({ course }) => {
     }
   }
   return (
-    <div className="border rounded-lg p-4 sm:p-6 shadow-sm bg-white relative w-full max-w-4xl mx-auto">
+    <div className="border rounded-lg p-4 sm:p-6 shadow-sm bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 relative w-full max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-indigo-800 break-words">
           {course.courseName}
@@ -43,15 +44,19 @@ const CourseCard = ({ course }) => {
           course.subjects.map(sub => (
             <li
               key={sub.subjectId}
-              className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1 gap-1"
+              // flex flex-col  sm:flex-row sm:justify-between sm:items-center : removed css from <li/> tag
+              className="justify-center py-1 gap-1 list-item "
             >
+              <div className='flex justify-between w-[50%] max-md:w-full'>
               <span className="w-fit">{sub.subjectName}</span>
               <button
                 onClick={() => handleDelete(sub.subjectId)}
                 className="text-red-600 hover:text-red-800  text-sm sm:text-base ml-2 w-fit sm:w-auto text-left sm:text-right"
               >
-                Delete
+                {/* Delete */}
+                 <TrashIcon className='h-4.5 w-fit pt-1'/>
               </button>
+              </div>
             </li>
           ))
         ) : (

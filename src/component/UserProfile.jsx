@@ -60,7 +60,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4  rounded-lg">
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-center text-indigo-800 mb-6">Edit Profile</h2>
         <div className="space-y-4">
