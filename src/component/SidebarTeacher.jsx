@@ -1,13 +1,26 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
 
-const SidebarTeacher = ({ isSidebarOpen }) => {
+const SidebarTeacher = ({ isSidebarOpen, toggleSidebar }) => {
   return (
-    <div className={`bg-gray-400 w-64 min-h-screen flex flex-col`}>
+    <div
+      className={`
+        bg-gray-400 w-64 min-h-screen flex flex-col fixed top-0 left-0 z-40 transform transition-transform duration-300
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        md:relative md:translate-x-0
+      `}
+    >
       {/* Header */}
       <h2 className="py-5 text-xl text-center font-bold text-gray-800">
         Dashboard
       </h2>
+
+      {/* Close button for mobile */}
+      <IoMdClose
+        className="md:hidden absolute top-4 bg-gray-300 rounded-md right-3 w-8 h-8 flex items-center justify-center hover:bg-gray-200"
+        onClick={toggleSidebar}
+        aria-label="Close Sidebar"
+      />
 
       {/* Navigation */}
       <nav className="h-screen overflow-y-auto mt-6">
